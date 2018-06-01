@@ -1,24 +1,28 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <router-link to="/login">goto login</router-link>
     <router-view/>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  beforeMount: function () {
+    var browserLanguage = navigator.language
+    if (!browserLanguage) {
+      browserLanguage = navigator.browserLanguage
+    }
+    console.log(browserLanguage)
+    browserLanguage = browserLanguage.toLowerCase()
+    if (browserLanguage.indexOf('zh') > -1) {
+      this.$i18n.locale = 'zh'
+    } else if (browserLanguage.indexOf('en') > -1) {
+      this.$i18n.locale = 'en'
+    }
+  }
 }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>
