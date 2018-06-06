@@ -8,5 +8,8 @@ export const m = {
   passwdWarn: 'please input your password',
   login: 'sign in',
   logoff: 'sign out',
+  onLogin: 'logining……',
+  requestError: 'Request Error',
+  userError: 'username or password error',
   enLocale
 }

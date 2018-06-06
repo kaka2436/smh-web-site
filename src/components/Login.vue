@@ -19,6 +19,8 @@
 <script>
 import crypto from 'crypto'
 import server from '../../static/common'
+import axios from 'axios'
+
 export default {
   name: 'login',
   data: function () {
@@ -38,29 +40,61 @@ export default {
     }
   },
   methods: {
+    showLoad: function () {
+      const loading = this.$loading({
+        lock: true,
+        text: this.$t('m.onLogin'),
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      setTimeout(() => {
+        loading.close()
+      }, 1000)
+    },
+    showFailed: function (msg) {
+      this.$alert(msg, '登录失败', {
+        confirmButtonText: '确定',
+        type: 'error',
+        center: true,
+        callback: action => {
+          this.user.passwd = ''
+        }
+      })
+    },
     onSubmit: function (formName) {
       this.$refs[formName].validate((valid) => {
         if (!valid) {
           console.log('error submit!!')
           return false
         } else {
+          this.showLoad()
           var userInfo = this.user
           var md5 = crypto.createHash('md5')
           md5.update(userInfo.passwd)
           userInfo.passwd = md5.digest('hex')
           var str = JSON.stringify(userInfo)
-          this.$ajax({
-            method: 'post',
-            url: 'https://' + server.hostname + ':' + server.port + '/user/login',
-            data: str
-          }).then(function (e, r, s) {
-            console.log(s)
+          axios.post('https://' + server.hostname + ':' + server.port + '/user/login', str).then(res => {
+            if (res.data.states === 'success') {
+              server.auth = res.data.message.auth
+              sessionStorage.setItem('auth', server.auth)
+              sessionStorage.setItem('api', res.data.message.api)
+              this.$router.push('/')
+            } else if (res.data.states === 'failed') {
+              if (res.data.message.code === 100) {
+                this.showFailed(this.$t('m.userError'))
+              } else if (res.data.message.code === 200) {
+                this.showFailed(this.$t('m.requestError'))
+              }
+            }
+          }).catch(e => {
+            this.showFailed(this.$t('m.requestError'))
           })
         }
       })
     }
   }
 }
+
 </script>
 
 <style>

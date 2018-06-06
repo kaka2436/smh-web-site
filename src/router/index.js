@@ -2,11 +2,13 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
+import server from '../../static/common'
 Vue.use(Router)
 const routers = [
   {
     path: '/',
-    component: Home
+    component: Home,
+    meta: {requireLogin: true}
   },
   {
     path: '/login',
@@ -16,29 +18,34 @@ const routers = [
   {
     path: '/home',
     name: 'home',
-    component: Home
+    component: Home,
+    meta: {requireLogin: true}
   }
 ]
 
 const router = new Router({
-  routes: routers
+  routes: routers,
+  mode: 'history'
 })
 
-// router.beforeEach(async (to, from, next) => {
-//   const { name, meta } = to
-//   const { requireLogin } = meta
-//   if (name === 'login') {
-//     return next()
-//   }
-//   const needLogin = requireLogin && !store.getters.user.isLogin
-//   if (needLogin) {
-//     return next({
-//       name: 'login',
-//       params: {back: to}
-//     })
-//   }
-//   return next()
-// })
+router.beforeEach(async (to, from, next) => {
+  const { name, meta } = to
+  const { requireLogin } = meta
+  if (name === 'login' && (sessionStorage.getItem('auth') === server.auth)) {
+    return next({
+      name: 'home'
+    })
+  } else {
+    const needLogin = requireLogin && (sessionStorage.getItem('auth') !== server.auth)
+    if (needLogin) {
+      return next({
+        name: 'login',
+        params: {back: to}
+      })
+    }
+  }
+  return next()
+})
 
 // function loginSuccess () {
 //   const { params: { back } } = this.$route
