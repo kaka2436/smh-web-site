@@ -1,18 +1,25 @@
 <template>
   <div class="main-frames">
     <el-row class="header" type="flex" justify="space-between">
-      <el-col class="logo" :xs="10" :sm="5" :md="3" style="border: 1px solid blue;" ></el-col>
-      <el-col class="name" :xs="9" :sm="16" :md="18" style="border: 1px solid blue;"></el-col>
-      <el-col class="user-info" :xs="5" :sm="3" :md="3" style="border: 1px solid black">
-        <a href="#">
-          <div class="user">
-            <i class="fa fa-user"></i>
-          </div>
-        </a>
+      <el-col class="logo" :xs="10" :sm="5" :md="3"></el-col>
+      <el-col class="name" :xs="9" :sm="16" :md="18"></el-col>
+      <el-col class="user-info" :xs="5" :sm="3" :md="3" style="border:1px solid green">
+        <el-dropdown>
+          <el-button type="primary" class="user">
+            <i class="fa fa-user"></i>USERNAME<i class="el-icon-arrow-down el-icon--right"></i>
+          </el-button>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>黄金糕</el-dropdown-item>
+            <el-dropdown-item>狮子头</el-dropdown-item>
+            <el-dropdown-item>螺蛳粉</el-dropdown-item>
+            <el-dropdown-item>双皮奶</el-dropdown-item>
+            <el-dropdown-item>蚵仔煎</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </el-col>
     </el-row>
     <el-row class="main-body" type="flex">
-      <el-col class="aside" :xs="10" :sm="5" :md="3" style="border: 1px solid blue;">
+      <el-col class="aside" :xs="10" :sm="5" :md="3">
         <el-menu
           default-active="1"
           class="aside-menu"
@@ -66,9 +73,7 @@
         <el-row class="main-container">
           <router-view/>
         </el-row>
-        <el-row class="footer">
-          底部区域
-        </el-row>
+        <el-row class="footer"></el-row>
       </el-col>
     </el-row>
   </div>
@@ -100,6 +105,7 @@ export default {
   .header {
     background-color: #e1251b;
     height: 8%;
+    width: 100%;
   }
   .main-body {
     height: 92%;
@@ -115,14 +121,15 @@ export default {
   }
   .footer {
     height: 3%;
-    background-color: #dddddd;
-    line-height: initial;
+    background: #dddddd url("../assets/copyright.png") no-repeat center center;
+    background-size: auto 100%;
   }
   .user-info {
     height: 100%;
   }
   .user-info .user {
     height: 100%;
+    width: 100%;
   }
   .logo{
     background: url("../assets/logo.png") no-repeat;
