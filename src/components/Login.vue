@@ -47,9 +47,7 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      setTimeout(() => {
-        loading.close()
-      }, 1000)
+      return loading
     },
     showFailed: function (msg) {
       this.$alert(msg, '登录失败', {
@@ -67,7 +65,7 @@ export default {
           console.log('error submit!!')
           return false
         } else {
-          this.showLoad()
+          const loading = this.showLoad()
           var userInfo = this.user
           var md5 = crypto.createHash('md5')
           md5.update(userInfo.passwd)
@@ -78,8 +76,13 @@ export default {
               server.auth = res.data.message.auth
               sessionStorage.setItem('auth', server.auth)
               sessionStorage.setItem('api', res.data.message.api)
+              sessionStorage.setItem('username', this.user.username.toLocaleUpperCase())
               this.$router.push('/')
+              setTimeout(() => {
+                loading.close()
+              }, 500)
             } else if (res.data.states === 'failed') {
+              loading.close()
               if (res.data.message.code === 100) {
                 this.showFailed(this.$t('m.userError'))
               } else if (res.data.message.code === 200) {
@@ -87,6 +90,7 @@ export default {
               }
             }
           }).catch(e => {
+            loading.close()
             this.showFailed(this.$t('m.requestError'))
           })
         }
