@@ -1,19 +1,28 @@
 <template>
-  <el-row type="flex" justify="center" class="login">
-    <el-col :xs="6" :sm="6">
-        <el-form :model="user" :rules="rules" ref="user" id="login-form">
-          <el-form-item :label="$t('m.username')" prop="username">
-            <el-input v-model="user.username" :placeholder="$t('m.usernameHold')" ></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('m.passwd')" prop="passwd">
-            <el-input type="password" v-model="user.passwd" :placeholder="$t('m.passwdHold')" v-on:keyup.enter.native="onSubmit('user')"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" v-on:click="onSubmit('user')">{{$t('m.login')}}</el-button>
-          </el-form-item>
-        </el-form>
+  <!--<div class="login">-->
+    <!--<div id="login-div">-->
+  <el-row type="flex" justify="center">
+    <el-col :xs="22" :sm="10" :md="10" class="form-col">
+      <el-form :model="user" :rules="rules" ref="user" id="login-form" label-width="80px">
+        <span id="login-from-head">LOGIN</span>
+        <el-form-item :label="$t('m.username')" prop="username">
+          <el-input v-model="user.username" :placeholder="$t('m.usernameHold')"></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('m.passwd')" prop="passwd">
+          <el-input type="password" v-model="user.passwd" :placeholder="$t('m.passwdHold')" v-on:keyup.enter.native="onSubmit('user')"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" v-on:click="onSubmit('user')">{{$t('m.login')}}</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="info" size="mini" @click="changeToChinese">中文</el-button>
+          <el-button type="info" size="mini" @click="changeToEnglish">English</el-button>
+        </el-form-item>
+      </el-form>
     </el-col>
   </el-row>
+    <!--</div>-->
+  <!--</div>-->
 </template>
 
 <script>
@@ -40,6 +49,14 @@ export default {
     }
   },
   methods: {
+    changeToEnglish: function () {
+      this.$i18n.locale = 'en'
+      localStorage.setItem('language', 'en')
+    },
+    changeToChinese: function () {
+      this.$i18n.locale = 'zh'
+      localStorage.setItem('language', 'zh')
+    },
     showLoad: function () {
       const loading = this.$loading({
         lock: true,
@@ -50,8 +67,8 @@ export default {
       return loading
     },
     showFailed: function (msg) {
-      this.$alert(msg, '登录失败', {
-        confirmButtonText: '确定',
+      this.$alert(msg, this.$t('m.loginErr'), {
+        confirmButtonText: this.$t('m.btnOk'),
         type: 'error',
         center: true,
         callback: action => {
@@ -71,13 +88,14 @@ export default {
           md5.update(userInfo.passwd)
           userInfo.passwd = md5.digest('hex')
           var str = JSON.stringify(userInfo)
+          loading.close()
           axios.post('https://' + server.hostname + ':' + server.port + '/user/login', str).then(res => {
             if (res.data.states === 'success') {
               server.auth = res.data.message.auth
               sessionStorage.setItem('auth', server.auth)
               sessionStorage.setItem('api', res.data.message.api)
               sessionStorage.setItem('username', this.user.username.toLocaleUpperCase())
-              this.$router.push('/')
+              this.$router.push('/home/routerlist')
               setTimeout(() => {
                 loading.close()
               }, 500)
@@ -96,15 +114,34 @@ export default {
         }
       })
     }
+  },
+  beforeMount: function () {
+    const language = localStorage.getItem('language') || this.$i18n.locale
+    this.$i18n.locale = language
+    localStorage.setItem('language', language)
   }
 }
 
 </script>
 
 <style>
-  .login{
-    border: 1px solid red;
-    vertical-align: center;
+  .form-col {
+    margin-top: 10%;
+    box-shadow: 10px 10px 10px #888;
+    background-color: #e1251b;
+    border: 1px solid #e5e5e5;
   }
-
+  #login-from-head {
+    color: dimgray;
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 10px;
+  }
+  #login-form {
+    width: 70%;
+    margin-right: 0;
+    background-color: #f5f5f5;
+    padding: 10px;
+    float: right;
+  }
 </style>

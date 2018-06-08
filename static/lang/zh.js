@@ -9,7 +9,18 @@ export const m = {
   login: '登录',
   logoff: '退出',
   onLogin: '登陆中……',
+  loginErr: '登陆失败',
+  btnOk: '确定',
   requestError: '请求错误',
   userError: '用户名或密码错误',
+  route: '路由',
+  routeList: '路由列表',
+  netWork: '网络',
+  netSetting: '网络设置',
+  connectTest: '连接测试',
+  system: '系统',
+  systemInfo: '系统状态',
+  version: '版本信息',
+  logout: '退出',
   zhLocale
 }

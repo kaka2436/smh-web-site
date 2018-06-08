@@ -2,7 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
+import RouterList from '@/components/RouterList'
 import server from '../../static/common'
+import NetSetting from '@/components/NetSetting'
 Vue.use(Router)
 const routers = [
   {
@@ -19,7 +21,19 @@ const routers = [
     path: '/home',
     name: 'home',
     component: Home,
-    meta: {requireLogin: true}
+    meta: {requireLogin: true},
+    children: [
+      {
+        path: 'routerlist',
+        component: RouterList,
+        meta: {requireLogin: true}
+      },
+      {
+        path: 'netsetting',
+        component: NetSetting,
+        meta: {requireLogin: true}
+      }
+    ]
   }
 ]
 
@@ -46,12 +60,5 @@ router.beforeEach(async (to, from, next) => {
   }
   return next()
 })
-
-// function loginSuccess () {
-//   const { params: { back } } = this.$route
-//   const route = back || {name: 'home'}
-//   const { name, params, query } = route
-//   this.$router.replace({ name, params, query })
-// }
 
 export default router

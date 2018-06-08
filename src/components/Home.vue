@@ -6,14 +6,14 @@
           <img src="../assets/logo.png" alt="" @click="menuChange">
         </li>
       </el-col>
-      <el-col class="name" :xs="9" :sm="16" :md="18"></el-col>
-      <el-col class="user-info" :xs="5" :sm="3" :md="3">
+      <el-col class="name" :xs="7" :sm="16" :md="18"></el-col>
+      <el-col class="user-info" :xs="7" :sm="3" :md="3">
         <el-dropdown class="user" trigger="click">
           <span class="el-dropdown-link btn-user">
             <i class="fa fa-user"></i> {{username}} <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item class="menu-item">退出</el-dropdown-item>
+            <el-dropdown-item class="menu-item">{{$t('m.logout')}}</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-col>
@@ -21,47 +21,46 @@
     <el-row class="main-body" type="flex">
       <transition name="menu-side">
         <el-col class="aside" v-show="showMenu" :xs="10" :sm="5" :md="3">
-          <transition name="menu-side">
-            <!--<div id="side-bar"></div>-->
             <el-menu
-              default-active="1"
+              :default-active="$route.path"
               :unique-opened=true
               active-text-color="#ff564d"
+              :router=true
+              index="/home"
               class="aside-menu"
               background-color="#393532"
               text-color="#fff"
               style="border-right: none">
               <el-submenu index="router">
                 <template slot="title">
-                  <!--<i class="el-icon-location"></i>-->
                   <img src="../assets/router.png" alt="">
-                  <span>路由</span>
+                  <span>{{$t('m.route')}}</span>
                 </template>
-                <el-menu-item index="1" ref="list">
-                  <span>路由列表</span>
+                <el-menu-item ref="list" index="/home/routerlist">
+                  <span>{{$t('m.routeList')}}</span>
                 </el-menu-item>
               </el-submenu>
               <el-submenu index="internet">
                 <template slot="title">
                   <!--<i class="el-icon-location"></i>-->
                   <img src="../assets/router.png" alt="">
-                  <span>网络</span>
+                  <span>{{$t('m.netWork')}}</span>
                 </template>
-                <el-menu-item index="2">
-                  <span>网络设置</span>
+                <el-menu-item index="/home/netsetting">
+                  <span>{{$t('m.netSetting')}}</span>
                 </el-menu-item>
                 <el-menu-item index="3">
-                  <span>连接测试</span>
+                  <span>{{$t('m.connectTest')}}</span>
                 </el-menu-item>
               </el-submenu>
               <el-submenu index="system">
                 <template slot="title">
                   <!--<i class="el-icon-location"></i>-->
                   <img src="../assets/sys.png" alt="">
-                  <span>系统</span>
+                  <span>{{$t('m.system')}}</span>
                 </template>
                 <el-menu-item index="4">
-                  <span>系统状态</span>
+                  <span>{{$t('m.systemInfo')}}</span>
                 </el-menu-item>
                 <el-menu-item index="5">
                   <span>Log</span>
@@ -70,14 +69,13 @@
                   <span>License</span>
                 </el-menu-item>
                 <el-menu-item index="7">
-                  <span>版本信息</span>
+                  <span>{{$t('m.version')}}</span>
                 </el-menu-item>
               </el-submenu>
             </el-menu>
-          </transition>
         </el-col>
       </transition>
-      <el-col class="main" ref="body" :xs="14" :sm="19" :md="21">
+      <el-col class="main" ref="body">
         <el-row class="main-container">
           <router-view/>
         </el-row>
@@ -112,6 +110,11 @@ export default {
         console.log(res)
       })
     }
+  },
+  beforeMount: function () {
+    const language = localStorage.getItem('language') || this.$i18n.locale
+    this.$i18n.locale = language
+    localStorage.setItem('language', language)
   }
 }
 
@@ -134,6 +137,7 @@ export default {
     height: 100%;
     background-color: #393532;
     color: #fff;
+    overflow: hidden;
   }
   .menu-side-enter-active {
     transition:all .5s linear;
@@ -196,13 +200,5 @@ export default {
     background: url("../assets/name.png") no-repeat;
     background-size:auto 100%;
     -moz-background-size:auto  100%;
-  }
-  #side-bar {
-    height: 100%;
-    width: 2%;
-    background-color: black;
-    float: right;
-    border: 1px solid green;
-    display: float;
   }
 </style>
