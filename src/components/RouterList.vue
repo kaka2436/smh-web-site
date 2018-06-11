@@ -22,7 +22,9 @@
       </el-col>
     </el-row>
     <hr/>
-    <el-row class="table"></el-row>
+    <el-row class="table">
+
+    </el-row>
     <el-row></el-row>
   </div>
 </template>
@@ -42,11 +44,11 @@ export default {
     margin-left: 20px;
   }
   #route-header {
-    margin-top: 10px;
-    border: 1px solid red;
+    margin-top: 20px;
   }
   #route-title {
     display: inline-block;
+    font-size: 18px;
   }
   #route-num{
     display: inline-block;
@@ -55,6 +57,7 @@ export default {
   #page-select {
     width: 100px;
     display: inline-block;
+    padding-left: 5px;
   }
   div hr {
     border: none;
